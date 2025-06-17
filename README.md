@@ -48,7 +48,7 @@ cp .env.example .env
 
 4. Run the application:
 ```bash
-streamlit run app/main.py
+streamlit run app/app.py
 ```
 
 ## Development

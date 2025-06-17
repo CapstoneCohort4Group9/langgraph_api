@@ -12,11 +12,9 @@ class PredictionPipeline:
     def predict(self):
         # Load label encoder
         label_encoder = joblib.load("models/intent/labelEncoder/label_encoder.pkl")
-        peft_config = PeftConfig.from_pretrained(
-            os.path.join("models", "intent", "model.h5")
-        )
         base_model = AutoModelForSequenceClassification.from_pretrained(
-            os.path.join("models", "intent", "base_model.h5"),
+            "distilbert-base-uncased",
+            num_labels=33,
             use_safetensors=True,
             trust_remote_code=True,
         )

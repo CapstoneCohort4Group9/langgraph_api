@@ -53,7 +53,7 @@ def main():
                 state = {"messages": conversation}
                 result = graph.invoke(state)
                 print("my results", result)
-                st.success(f"Result: {result['text']}")
+                st.success(f"Intent: {result['intentMessage']}")
         else:
             st.warning("Please enter a conversation to analyze.")
 

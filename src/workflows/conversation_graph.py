@@ -1,11 +1,16 @@
 from langgraph.graph import StateGraph
 from tools.tools import detect_intent_tool
 from langchain_core.runnables import RunnableLambda
+from langchain_core.runnables import RunnablePassthrough
 from pydantic import BaseModel
 from typing import Dict, Any
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_community.chat_models import ChatOpenAI
 
 # from agents.sentiment_analyzer import analyze_sentiment
-# from agents.retriever import retrieve_docs
+from agents.retriever import getRetriever
+
 # from agents.llm_responder import generate_reply
 from agents.summarizer import summarize
 
@@ -34,9 +39,27 @@ def intent(state):
     return {**state, "intentMessage": intent}
 
 
-# def retriever_node(state):
-#     docs = retrieve_docs(state["query"])
-#     return {"docs": docs, **state}
+def retriever_node(state):
+    print("DEBUG:", state)
+    retriever = getRetriever()
+    question = state["query"]
+    template = """Answer the question based only on the following context:
+    {context}
+
+    Question: {question}
+    """
+    prompt = ChatPromptTemplate.from_template(template)
+    llm = ChatOpenAI()
+    retrieval_chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+    result = retrieval_chain.invoke(question)
+    print("DEBUG RESULT:", result)
+    return {"ragContext": result, **state}
+
 
 # def response_node(state):
 #     response = generate_reply(state["query"], state["docs"], state.get("chat_history", ""))
@@ -49,7 +72,8 @@ def summarizer(state):
     print("Running summarization...", state)
     print("DEBUG:", state)
     summary = summarize(state)
-    return {"summary": summary, **state}
+    print("DEBUG: Summary result:", summary)
+    return summary
 
 
 def build_graph():
@@ -76,7 +100,7 @@ def build_graph():
 
     builder = StateGraph(State)
     builder.add_node("intent", RunnableLambda(intent))
-    builder.add_node("summarizer", RunnableLambda(summarize))
+    builder.add_node("summarizer", RunnableLambda(summarizer))
     builder.set_entry_point("intent")
     builder.add_edge("intent", "summarizer")
     builder.set_finish_point("summarizer")
