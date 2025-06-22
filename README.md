@@ -5,7 +5,7 @@ A sophisticated conversational intelligence platform powered by Large Language M
 ## Features
 
 - Sentiment Analysis Agent (using Hugging Face models)
-- Intent Classification Agent
+- Intent Classification Agent (using Hugging Face models)
 - Retrieval Agent
 - Interactive Streamlit Frontend
 - LangGraph for agent orchestration
@@ -16,12 +16,16 @@ A sophisticated conversational intelligence platform powered by Large Language M
 
 ```
 convo_ai/
-├── app/                    # Streamlit frontend application
+├── app.py                    # Streamlit frontend application
 ├── src/                    # Core application code
 │   ├── agents/            # Agent implementations
 │   ├── config/            # Configuration files
-│   ├── models/            # Data models
-│   └── utils/             # Utility functions
+│   ├── llms/              # llm models
+│   ├── utils/             # Utility functions
+│   ├── graphs/            # Langgrapgh grapgh builder
+│   ├── nodes/             # Langgrapgh nodes
+│   ├── state/             # Langgrapgh state
+│   └── tools/             # Tools
 ├── tests/                 # Test files
 ├── .env.example          # Example environment variables
 ├── requirements.txt      # Project dependencies
@@ -48,7 +52,7 @@ cp .env.example .env
 
 4. Run the application:
 ```bash
-streamlit run app/app.py
+streamlit run app.py
 ```
 
 ## Development

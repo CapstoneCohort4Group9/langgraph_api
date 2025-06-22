@@ -7,9 +7,9 @@ with open("README.md", "r", encoding="utf-8") as f:
 __version__ = "0.0.0"
 
 REPO_NAME = "Conversational_AI_Agent"
-AUTHOR_USER_NAME = "Ashish Pal Singh"
+AUTHOR_USER_NAME = "Group 9"
 SRC_REPO = "src"
-AUTHOR_EMAIL = "ashujss11@gmail.com"
+AUTHOR_EMAIL = "hopjetair@gmail.com"
 
 
 setuptools.setup(

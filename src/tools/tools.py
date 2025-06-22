@@ -1,10 +1,5 @@
 from langchain.tools import tool
-from utils.prediction import PredictionPipeline
-
-# @tool
-# def detect_sentiment_tool(text: str) -> str:
-#     result = sentiment_pipeline(text)[0]
-#     return f"Label: {result['label']}, Score: {result['score']}"
+from src.utils.prediction import PredictionPipeline
 
 
 @tool
