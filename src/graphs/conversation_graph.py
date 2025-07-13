@@ -4,7 +4,6 @@ from nodes.parsetoolcall import ParseToolCallToolNode
 from src.state.state import State
 from src.nodes.intent import IntentToolNode
 from src.nodes.sentiment import SentimentToolNode
-from src.nodes.summarizer import SummarizerNode
 from src.nodes.callbedrockmodel import CallingBedrockModelToolNode
 from src.nodes.calltoolorragapi import CallTravelOrRAGAPINode
 from src.nodes.appendtoolresult import AppendToolResultNode
@@ -20,7 +19,6 @@ class GraphBuilder:
         """
         self.intent_node_obj = IntentToolNode()
         self.sentiment_node_obj = SentimentToolNode()
-        self.summarizer_node_obj = SummarizerNode()
         self.call_bedrock_model_node_obj = CallingBedrockModelToolNode()
         self.parse_tool_call_node_obj = ParseToolCallToolNode()
 
