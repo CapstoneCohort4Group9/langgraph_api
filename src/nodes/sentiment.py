@@ -1,9 +1,9 @@
 from src.state.state import State
-from src.tools.tools import get_intent_tool
+from src.tools.tools import get_sentiment_tool
 from src import logger
 
 
-class IntentToolNode:
+class SentimentToolNode:
     """
     Node logic enhanced with tool integration.
     """
@@ -15,7 +15,7 @@ class IntentToolNode:
         """
         Processes the input state and generates a response with tool integration.
         """
-        logger.info(f"Running intent detection...{state['input']}")
-        intent = get_intent_tool.run(state["input"])
-        logger.info(f"Detected intent: {intent}")
-        return {**state, "intent": intent}
+        logger.info(f"Running sentiment analysis...{state['input']}")
+        sentiment = get_sentiment_tool.run(state["input"])
+        logger.info(f"Analysed sentiment: {sentiment}")
+        return {**state, "sentiment": sentiment}

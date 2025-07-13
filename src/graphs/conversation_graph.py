@@ -1,8 +1,13 @@
 from langgraph.graph import StateGraph, START, END
 from langchain_core.runnables import RunnableLambda
+from nodes.parsetoolcall import ParseToolCallToolNode
 from src.state.state import State
 from src.nodes.intent import IntentToolNode
+from src.nodes.sentiment import SentimentToolNode
 from src.nodes.summarizer import SummarizerNode
+from src.nodes.callbedrockmodel import CallingBedrockModelToolNode
+from src.nodes.calltoolorragapi import CallTravelOrRAGAPINode
+from src.nodes.appendtoolresult import AppendToolResultNode
 
 
 class GraphBuilder:
@@ -14,17 +19,41 @@ class GraphBuilder:
         Build a graph to generate blogss based on topic
         """
         self.intent_node_obj = IntentToolNode()
+        self.sentiment_node_obj = SentimentToolNode()
         self.summarizer_node_obj = SummarizerNode()
+        self.call_bedrock_model_node_obj = CallingBedrockModelToolNode()
+        self.parse_tool_call_node_obj = ParseToolCallToolNode()
+
         ## Nodes
         self.graph.add_node("intent", RunnableLambda(self.intent_node_obj.process))
         self.graph.add_node(
-            "summarizer", RunnableLambda(self.summarizer_node_obj.process)
+            "sentiment", RunnableLambda(self.sentiment_node_obj.process)
+        )
+        self.graph.add_node(
+            "call_bedrock_model",
+            RunnableLambda(self.call_bedrock_model_node_obj.process),
+        )
+        self.graph.add_node(
+            "parse_tool_call",
+            RunnableLambda(self.parse_tool_call_node_obj.process),
+        )
+        self.graph.add_node(
+            "call_travel_or_rag_api",
+            RunnableLambda(CallTravelOrRAGAPINode().process),
+        )
+        self.graph.add_node(
+            "append_tool_result",
+            RunnableLambda(AppendToolResultNode().process),
         )
 
         ## Edges
         self.graph.add_edge(START, "intent")
-        self.graph.add_edge("intent", "summarizer")
-        self.graph.add_edge("summarizer", END)
+        self.graph.add_edge("intent", "sentiment")
+        self.graph.add_edge("sentiment", "call_bedrock_model")
+        self.graph.add_edge("call_bedrock_model", "parse_tool_call")
+        self.graph.add_edge("parse_tool_call", "call_travel_or_rag_api")
+        self.graph.add_edge("call_travel_or_rag_api", "append_tool_result")
+        self.graph.add_edge("append_tool_result", END)
 
         return self.graph
 

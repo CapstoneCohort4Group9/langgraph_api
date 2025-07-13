@@ -30,10 +30,18 @@ def main():
             with st.spinner("Analyzing conversation..."):
                 # Run parallel analysis
                 print("Running analysis on conversation:", conversation)
-                state = {"messages": conversation}
+                user_input = conversation
+                messages = []
+
+                state = {
+                    "input": user_input,
+                    "messages": messages,
+                }
                 result = graph.invoke(state)
                 print("my results", result)
-                st.success(f"Intent: {result['intentMessage']}")
+
+                # st.success(f"Result: {result}")
+                st.json(result)
         else:
             st.warning("Please enter a conversation to analyze.")
 
