@@ -28,20 +28,23 @@ class Config(BaseSettings):
     sentiment_model: str = "distilbert-base-uncased-finetuned-sst-2-english"
     intent_model: str = "facebook/bart-large-mnli"
 
-    INTENT_API_URL: str
-    SENTIMENT_API_URL: str
-    RAG_API_URL: str
-    SEARCH_FLIGHT_API_URL: str
-    BOOK_FLIGHT_API_URL: str
-    BAGGAGE_STATUS_API_URL: str
-    CHECK_FLIGHT_OFFERS_API_URL: str
+    INTENT_API_URL: str = os.getenv("INTENT_API_URL", "")
+    SENTIMENT_API_URL: str = os.getenv("SENTIMENT_API_URL", "")
+    RAG_API_URL: str = os.getenv("RAG_API_URL", "")
+    SEARCH_FLIGHT_API_URL: str = os.getenv("SEARCH_FLIGHT_API_URL", "")
+    BOOK_FLIGHT_API_URL: str = os.getenv("BOOK_FLIGHT_API_URL", "")
+    BAGGAGE_STATUS_API_URL: str = os.getenv("BAGGAGE_STATUS_API_URL", "")
+    CHECK_FLIGHT_OFFERS_API_URL: str = os.getenv("CHECK_FLIGHT_OFFERS_API_URL", "")
+    NON_AI_API_URL: str = os.getenv("NON_AI_API_URL", "")
 
-    BEDROCK_REGION: str
-    BEDROCK_MODEL_ID: str
+    BEDROCK_REGION: str = os.getenv("BEDROCK_REGION", "")
+    BEDROCK_MODEL_ID: str = os.getenv("BEDROCK_MODEL_ID", "")
 
     # Optional for STS
-    AWS_PROFILE: str = ""
-    ASSUME_ROLE_ARN: str = ""
+    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+    API_KEY: str = os.getenv("API_KEY", "")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "")
+    ASSUME_ROLE_ARN: str = os.getenv("ASSUME_ROLE_ARN", "")
 
     class Config:
         env_file = ".env"
