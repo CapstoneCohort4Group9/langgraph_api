@@ -79,7 +79,7 @@ jobs:
           docker exec test-container curl -f http://localhost:8065/health || exit 1
 
           # Test sentiment analysis endpoint
-          docker exec test-container curl -f -X POST http://localhost:8065/classify_intent \
+          docker exec test-container curl -f -X POST http://localhost:8065/chat \
             -H "Content-Type: application/json" \
             -d '{
                 "message": "My booking reference number is YEYE2K",
