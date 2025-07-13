@@ -55,41 +55,17 @@ cp .env.example .env
 streamlit run app.py
 ```
 
-## Development
+5. Run the api:
+```bash
+python -m uvicorn src.app.main:app --host 0.0.0.0 --port 8065
+```
 
-- Use `black` for code formatting
-- Use `isort` for import sorting
-- Use `mypy` for type checking
-- Write tests using `pytest`
+6. Creating docker image
+```bash
+docker build -t langgrapgh_api  .
+```
 
-
-     +-----------------------------+
-     |   New User Message (Turn 2) |
-     +--------------+--------------+
-                    ↓
-        +--------------------------+
-        |  Fetch Previous Context  | ← from S3 / database
-        +--------------------------+
-                    ↓
-     +----------- Async Parallel Execution -----------+
-     |                                               |
-     | +----------------+  +------------------------+ |
-     | | Intent Agent   |  | Sentiment Analyzer     | |
-     | +----------------+  +------------------------+ |
-     +------------------------------------------------+
-                     ↓       ↓
-            +--------------------------+
-            |   Context Retriever Agent|
-            +--------------------------+
-                     ↓
-            +--------------------------+
-            | ReAct Based API Agent    |
-            +--------------------------+
-                     ↓
-     +----------------+    +----------------------+
-     | Summarizer     |    | Logging & Monitoring |
-     +----------------+    +----------------------+
-                     ↓
-            +--------------------------+
-            | Send Reply to User + Save|
-            +--------------------------+
+7. Creating docker container
+```bash
+docker run -p 8065:8065 -d --name langgrapgh_api langgrapgh_api
+```

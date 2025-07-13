@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, status
+from fastapi.responses import JSONResponse
 from src.graphs.conversation_graph import GraphBuilder
 
 router = APIRouter()
@@ -20,3 +21,9 @@ async def chat_endpoint(request: Request):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/health")
+async def health_check():
+    # Lightweight check for ALB
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": "ok"})
