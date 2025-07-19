@@ -8,15 +8,6 @@ load_dotenv()
 
 
 class Config(BaseSettings):
-    # API Keys
-    langchain_api_key: str = os.getenv("LANGCHAIN_API_KEY", "")
-    langchain_project: str = os.getenv("LANGCHAIN_PROJECT", "convo_ai")
-    langchain_endpoint: str = os.getenv("LANGCHAIN_ENDPOINT", "")
-    huggingface_api_key: str = os.getenv("HUGGINGFACE_API_KEY", "")
-    openai_api_key: Optional[str] = os.getenv(
-        "OPENAI_API_KEY",
-        "",
-    )
 
     # Environment
     environment: str = os.getenv("ENVIRONMENT", "development")
@@ -26,15 +17,11 @@ class Config(BaseSettings):
 
     # Agent Settings
     sentiment_model: str = "distilbert-base-uncased-finetuned-sst-2-english"
-    intent_model: str = "facebook/bart-large-mnli"
-
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT: int = int(os.getenv("REDIS_PORT", 6379))
     INTENT_API_URL: str = os.getenv("INTENT_API_URL", "")
     SENTIMENT_API_URL: str = os.getenv("SENTIMENT_API_URL", "")
     RAG_API_URL: str = os.getenv("RAG_API_URL", "")
-    SEARCH_FLIGHT_API_URL: str = os.getenv("SEARCH_FLIGHT_API_URL", "")
-    BOOK_FLIGHT_API_URL: str = os.getenv("BOOK_FLIGHT_API_URL", "")
-    BAGGAGE_STATUS_API_URL: str = os.getenv("BAGGAGE_STATUS_API_URL", "")
-    CHECK_FLIGHT_OFFERS_API_URL: str = os.getenv("CHECK_FLIGHT_OFFERS_API_URL", "")
     NON_AI_API_URL: str = os.getenv("NON_AI_API_URL", "")
 
     BEDROCK_REGION: str = os.getenv("BEDROCK_REGION", "")

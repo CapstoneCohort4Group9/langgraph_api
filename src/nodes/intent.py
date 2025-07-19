@@ -15,7 +15,21 @@ class IntentToolNode:
         """
         Processes the input state and generates a response with tool integration.
         """
-        logger.info(f"Running intent detection...{state['input']}")
-        intent = get_intent_tool.run(state["input"])
+
+        intentSearchQuery = ""
+        logger.info(f"state in intent detection...{state}")
+        if (
+            isinstance(state.get("messages"), list)
+            and len(state["messages"]) > 0
+            and state["messages"][-1].get("role") == "assistant"
+        ):
+            intentSearchQuery = state["messages"][-1]["content"] + " " + state["input"]
+        else:
+            intentSearchQuery = state["input"]
+        # if state["input"] == " Yes, please book that flight":
+        #     intent = "confirm_booking"
+        logger.info(f"Running intent detection...{intentSearchQuery}")
+        intent = get_intent_tool.run(intentSearchQuery)
+
         logger.info(f"Detected intent: {intent}")
         return {**state, "intent": intent}

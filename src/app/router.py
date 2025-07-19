@@ -12,10 +12,16 @@ async def chat_endpoint(request: Request):
     try:
         data = await request.json()
         user_input = data.get("message")
-        messages = data.get("messages", [])
+        user_id = data.get("user_id")
 
-        # Run the LangGraph workflow
-        result = graph.invoke({"input": user_input, "messages": messages})
+        if not user_id:
+            raise HTTPException(status_code=400, detail="user_id is required")
+
+        # Run the LangGraph workflow with user_id as thread_id for checkpointing
+        result = graph.invoke(
+            {"input": user_input},
+            config={"configurable": {"thread_id": user_id}},
+        )
 
         return {"messages": result["messages"]}
 

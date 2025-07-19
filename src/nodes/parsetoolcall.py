@@ -18,7 +18,7 @@ class ParseToolCallToolNode:
         """Extracts <tool_call>{...}</tool_call> block from the assistant's response"""
 
         last_msg = state["messages"][-1]
-
+        logger.info(f"Last message: {last_msg}")
         # ✅ Check if this message was from the assistant
         if last_msg.get("role") != "assistant":
             return {**state, "tool_call": ""}

@@ -1,6 +1,9 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.redis import RedisSaver
 from langchain_core.runnables import RunnableLambda
-from nodes.parsetoolcall import ParseToolCallToolNode
+from src.config.settings import load_config
+from src.nodes.finalmodelresponse import FinalModelResponseNode
+from src.nodes.parsetoolcall import ParseToolCallToolNode
 from src.state.state import State
 from src.nodes.intent import IntentToolNode
 from src.nodes.sentiment import SentimentToolNode
@@ -12,6 +15,8 @@ from src.nodes.appendtoolresult import AppendToolResultNode
 class GraphBuilder:
     def __init__(self):
         self.graph = StateGraph(State)
+        settings = load_config()
+        self.DB_URI = "redis://" + settings.REDIS_HOST + ":" + str(settings.REDIS_PORT)
 
     def build_graph(self):
         """
@@ -43,6 +48,9 @@ class GraphBuilder:
             "append_tool_result",
             RunnableLambda(AppendToolResultNode().process),
         )
+        self.graph.add_node(
+            "final_model_response", RunnableLambda(FinalModelResponseNode().process)
+        )
 
         ## Edges
         self.graph.add_edge(START, "intent")
@@ -51,10 +59,13 @@ class GraphBuilder:
         self.graph.add_edge("call_bedrock_model", "parse_tool_call")
         self.graph.add_edge("parse_tool_call", "call_travel_or_rag_api")
         self.graph.add_edge("call_travel_or_rag_api", "append_tool_result")
-        self.graph.add_edge("append_tool_result", END)
+        self.graph.add_edge("append_tool_result", "final_model_response")
+        self.graph.add_edge("final_model_response", END)
 
         return self.graph
 
     def setup_graph(self):
         self.graph = self.build_graph()
-        return self.graph.compile()
+        with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
+            checkpointer.setup()
+            return self.graph.compile(checkpointer=checkpointer)
