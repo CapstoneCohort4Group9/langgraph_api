@@ -16,7 +16,7 @@ class GraphBuilder:
     def __init__(self):
         self.graph = StateGraph(State)
         settings = load_config()
-        self.DB_URI = "redis://" + settings.REDIS_HOST + ":" + str(settings.REDIS_PORT)
+        self.DB_URI = settings.REDIS_HOST + ":" + str(settings.REDIS_PORT)
 
     def build_graph(self):
         """

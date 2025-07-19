@@ -67,5 +67,5 @@ docker build -t langgrapgh_api  .
 
 7. Creating docker container
 ```bash
-docker run -p 8065:8065 -d --name langgrapgh_api langgrapgh_api
+docker run  -v C:\Users\assi01\.aws:/root/.aws -e AWS_PROFILE=109038807292_Developer  -p 8065:8065 -d --name langgrapgh_api langgrapgh_api
 ```

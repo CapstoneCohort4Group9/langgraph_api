@@ -128,7 +128,262 @@ INTENT_TOOL_MAP = {
             },
         }
     ],
-    # Add other intents here (up to 34 total)
+    "check_flight_status": [
+        {
+            "name": "check_flight_status",
+            "description": "check_flight_status(flight_number: str, date: str, last_name: str, origin: str, destination: str, airline: str, confirmation_number: str, departure_airport: str, booking_reference: str, destination_airport: str, departure_city: str, arrival_city: str, arrival_airport: str, destination_city: str) -> dict - Check the current status of a flight using flight details and passenger information.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "flight_number": {"type": "string"},
+                    "date": {"type": "string"},
+                    "last_name": {"type": "string"},
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "airline": {"type": "string"},
+                    "confirmation_number": {"type": "string"},
+                    "departure_airport": {"type": "string"},
+                    "booking_reference": {"type": "string"},
+                    "destination_airport": {"type": "string"},
+                    "departure_city": {"type": "string"},
+                    "arrival_city": {"type": "string"},
+                    "arrival_airport": {"type": "string"},
+                    "destination_city": {"type": "string"},
+                },
+                "required": [
+                    "flight_number",
+                    "date",
+                    "last_name",
+                    "confirmation_number",
+                ],
+            },
+        }
+    ],
+    "change_flight": [
+        {
+            "name": "change_flight",
+            "description": "change_flight(confirmation_number: str, departure_city: str, arrival_city: str, desired_date_range: str, booking_reference: str, new_travel_date: str, new_date: str, new_time: str, origin: str, destination: str, new_destination: str, airline: str, new_departure_date: str, new_arrival_date: str, new_flight_date: str, new_flight_time: str, fare_type: str, modification_type: str, new_classname: str, change_type: str, flight_number: str, date: str, new_flight: str, change_fee: number, original_departure: str, original_arrival: str, preferred_new_dates: array, airline_preference: str, new_flight_number: str, new_departure_time: str, new_departure_date_offset_days: number) -> dict - Modify a previously booked flight with new travel preferences.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "confirmation_number": {"type": "string"},
+                    "departure_city": {"type": "string"},
+                    "arrival_city": {"type": "string"},
+                    "desired_date_range": {"type": "string"},
+                    "booking_reference": {"type": "string"},
+                    "new_travel_date": {"type": "string"},
+                    "new_date": {"type": "string"},
+                    "new_time": {"type": "string"},
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "new_destination": {"type": "string"},
+                    "airline": {"type": "string"},
+                    "new_departure_date": {"type": "string"},
+                    "new_arrival_date": {"type": "string"},
+                    "new_flight_date": {"type": "string"},
+                    "new_flight_time": {"type": "string"},
+                    "fare_type": {"type": "string"},
+                    "modification_type": {"type": "string"},
+                    "new_classname": {"type": "string"},
+                    "change_type": {"type": "string"},
+                    "flight_number": {"type": "string"},
+                    "date": {"type": "string"},
+                    "new_flight": {"type": "string"},
+                    "change_fee": {"type": "number"},
+                    "original_departure": {"type": "string"},
+                    "original_arrival": {"type": "string"},
+                    "preferred_new_dates": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "airline_preference": {"type": "string"},
+                    "new_flight_number": {"type": "string"},
+                    "new_departure_time": {"type": "string"},
+                    "new_departure_date_offset_days": {"type": "number"},
+                },
+                "required": [
+                    "confirmation_number",
+                    "booking_reference",
+                    "origin",
+                    "destination",
+                    "flight_number",
+                    "date",
+                ],
+            },
+        }
+    ],
+    "check_trip_prices": [
+        {
+            "name": "search_flight_prices",
+            "description": "search_flight_prices(origin: str, destination: str, departure_date: str, return_date: str, departure_date_range: List[str], sort_by: str, limit: int, passengers: dict, direct_flight: bool, cabin_classname: str, preferences: dict, return_date_range: List[str], trip_type: str, nonstop: bool, travel_classname: str) -> list - Retrieve available flight pricing options with filters like date ranges, trip type, passengers, and travel class.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "departure_date": {"type": "string"},
+                    "return_date": {"type": "string"},
+                    "departure_date_range": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "sort_by": {"type": "string"},
+                    "limit": {"type": "number"},
+                    "passengers": {
+                        "type": "object",
+                        "properties": {
+                            "adults": {"type": "number"},
+                            "children": {"type": "number"},
+                            "infants": {"type": "number"},
+                        },
+                        "additionalProperties": True,
+                    },
+                    "direct_flight": {"type": "boolean"},
+                    "cabin_classname": {"type": "string"},
+                    "preferences": {"type": "object", "additionalProperties": True},
+                    "return_date_range": {"type": "array", "items": {"type": "string"}},
+                    "trip_type": {"type": "string"},
+                    "nonstop": {"type": "boolean"},
+                    "travel_classname": {"type": "string"},
+                },
+                "required": [
+                    "origin",
+                    "destination",
+                    "departure_date",
+                    "trip_type",
+                    "passengers",
+                ],
+            },
+        }
+    ],
+    "check_flight_prices": [
+        {
+            "name": "check_flight_prices",
+            "description": "check_flight_prices(origin: str, destination: str, departure_date: str, return_date: str, passengers: dict, preferred_airlines: list, departure_date_range: list, return_date_range: list) -> list - Retrieve flight prices based on route, dates, passenger count, and airline preferences.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "departure_date": {"type": "string"},
+                    "return_date": {"type": "string"},
+                    "passengers": {
+                        "type": "object",
+                        "properties": {"adults": {"type": "number"}},
+                    },
+                    "preferred_airlines": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "departure_date_range": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "return_date_range": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": [
+                    "origin",
+                    "destination",
+                    "departure_date",
+                    "passengers",
+                ],
+            },
+        }
+    ],
+    "check_flight_reservation": [
+        {
+            "name": "check_flight_reservation",
+            "description": "check_flight_reservation(...) -> dict - Check details of a flight reservation based on name, booking reference, travel dates, and preferences.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "last_name": {"type": "string"},
+                    "departure_city": {"type": "string"},
+                    "arrival_city": {"type": "string"},
+                    "full_name": {"type": "string"},
+                    "destination_city": {"type": "string"},
+                    "booking_reference": {"type": "string"},
+                    "email": {"type": "string"},
+                    "first_name": {"type": "string"},
+                    "date_of_birth": {"type": "string"},
+                    "flight_number": {"type": "string"},
+                    "departure_date": {"type": "string"},
+                    "return_date": {"type": "string"},
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "flight_date_range": {
+                        "type": "object",
+                        "properties": {
+                            "start_date": {"type": "string"},
+                            "end_date": {"type": "string"},
+                        },
+                    },
+                    "flight_date": {"type": "string"},
+                    "travel_date": {"type": "string"},
+                    "passenger_count": {"type": "number"},
+                    "confirmation_number": {"type": "string"},
+                    "date_range": {
+                        "type": "object",
+                        "properties": {
+                            "start_date": {"type": "string"},
+                            "end_date": {"type": "string"},
+                        },
+                    },
+                    "travel_dates": {"type": "array", "items": {"type": "string"}},
+                    "travel_start_date": {"type": "string"},
+                    "travel_end_date": {"type": "string"},
+                    "date_of_travel": {"type": "string"},
+                    "travelers": {"type": "number"},
+                    "preferences": {
+                        "type": "object",
+                        "properties": {"direct_flight": {"type": "boolean"}},
+                    },
+                    "travel_month_year": {"type": "string"},
+                    "trip_date": {"type": "string"},
+                    "date": {"type": "string"},
+                },
+                "required": [
+                    "last_name",
+                    "booking_reference",
+                    "departure_date",
+                    "origin",
+                    "destination",
+                ],
+            },
+        }
+    ],
+    "cancel_flight": [
+        {
+            "name": "cancel_booking",
+            "description": "cancel_booking(confirmation_number: str) -> dict - Cancel a flight reservation using the booking confirmation number.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "confirmation_number": {
+                        "type": "string",
+                        "description": "The unique booking confirmation number associated with the reservation to be canceled.",
+                    }
+                },
+                "required": ["confirmation_number"],
+            },
+        }
+    ],
+    "check_baggage_allowance": [
+        {
+            "name": "query",
+            "description": "query(input: str) -> dict - Answer a natural language question based on available knowledge, optionally returning sources and confidence.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The natural language query or question to be answered.",
+                    }
+                },
+                "required": ["query"],
+            },
+        }
+    ],
 }
 
 

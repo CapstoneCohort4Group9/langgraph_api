@@ -31,6 +31,8 @@ class AppendToolResultNode:
                     + f"{{'name':{tool_call_dict['name']},'content':{[state['tool_output']]}}}"
                     + f"</tool_response>",
                 }
+                if tool_call_dict["name"] == "query_policy_rag_db":
+                    return state
                 state["messages"].append(tool_msg)
         logger.info(f"Appended tool result: {state['tool_output']}")
         return state

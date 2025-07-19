@@ -157,8 +157,8 @@ class CallingBedrockModelToolNode:
             json.dumps(bedrock_prompt_payload, indent=2),
         )
         payload = {
-            #  "prompt": get_tool_prompt_for_intent(state["intent"], state["messages"]),
-            "prompt": json.dumps(bedrock_prompt_payload),
+            "prompt": get_tool_prompt_for_intent(state["intent"], state["messages"]),
+            # "prompt": json.dumps(bedrock_prompt_payload),
             "max_tokens": 250,
             "temperature": 0.5,
             "top_p": 0.9,

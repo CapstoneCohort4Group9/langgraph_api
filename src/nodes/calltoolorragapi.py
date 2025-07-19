@@ -15,6 +15,18 @@ class CallTravelOrRAGAPINode:
     def __init__(self):
         self.BOOK_FLIGHT_API_URL = settings.NON_AI_API_URL + "/book_flight"
         self.SEARCH_FLIGHT_API_URL = settings.NON_AI_API_URL + "/search_flight"
+        self.CHECK_FLIGHT_STATUS_API_URL = (
+            settings.NON_AI_API_URL + "/check_flight_status"
+        )
+        self.CHANGE_FLIGHT_API_URL = settings.NON_AI_API_URL + "/change_flight"
+        self.CHECK_TRIP_PRICES_API_URL = settings.NON_AI_API_URL + "/check_trip_prices"
+        self.CHECK_FLIGHT_PRICES_API_URL = (
+            settings.NON_AI_API_URL + "/check_flight_prices"
+        )
+        self.CHECK_FLIGHT_RESERVATION_API_URL = (
+            settings.NON_AI_API_URL + "/check_flight_reservation"
+        )
+        self.CANCEL_FLIGHT_API_URL = settings.NON_AI_API_URL + "/cancel_flight"
 
     def process(self, state: State) -> State:
         logger.info(
@@ -31,18 +43,40 @@ class CallTravelOrRAGAPINode:
             # Route to appropriate external service
             if name == "query_policy_rag_db":
                 r = httpx.post(settings.RAG_API_URL, json={"query": state["input"]})
-                return {**state, "tool_output": r.json()["result"]}
+                logger.info(f"RAG API response: {r.json()}")
+                return {**state, "rag_response": r.json()["answer"]}
 
             elif name == "search_flight":
                 r = httpx.post(self.SEARCH_FLIGHT_API_URL, json=args)
-                return {**state, "tool_output": r.json()["data"]}
-
-            elif name == "check_flight_offers":
-                r = httpx.post(settings.CHECK_FLIGHT_OFFERS_API_URL, json=args)
+                logger.info(f"Search flight response: {r.json()}")
                 return {**state, "tool_output": r.json()["data"]}
 
             elif name == "book_flight":
                 r = httpx.post(self.BOOK_FLIGHT_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "check_flight_status":
+                r = httpx.post(self.CHECK_FLIGHT_STATUS_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "change_flight":
+                r = httpx.post(self.CHANGE_FLIGHT_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "check_trip_prices":
+                r = httpx.post(self.CHECK_TRIP_PRICES_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "check_flight_prices":
+                r = httpx.post(self.CHECK_FLIGHT_PRICES_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "check_flight_reservation":
+                r = httpx.post(self.CHECK_FLIGHT_RESERVATION_API_URL, json=args)
+                return {**state, "tool_output": r.json()["data"]}
+
+            elif name == "cancel_flight":
+                r = httpx.post(self.CANCEL_FLIGHT_API_URL, json=args)
                 return {**state, "tool_output": r.json()["data"]}
 
             elif name == "check_baggage_allowance":
