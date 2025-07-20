@@ -66,7 +66,7 @@ class GraphBuilder:
 
     def setup_graph(self):
         self.graph = self.build_graph()
-        return self.graph.compile()
-        # with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
-        #     checkpointer.setup()
-        #     return self.graph.compile(checkpointer=checkpointer)
+        # return self.graph.compile()
+        with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
+            checkpointer.setup()
+            return self.graph.compile(checkpointer=checkpointer)
