@@ -1,5 +1,8 @@
 from langgraph.graph import StateGraph, START, END
-from langgraph.checkpoint.redis import RedisSaver
+from langgraph.checkpoint.memory import InMemorySaver
+
+# import redis
+# from langgraph.checkpoint.redis import RedisSaver
 from langchain_core.runnables import RunnableLambda
 from src.config.settings import load_config
 from src.nodes.finalmodelresponse import FinalModelResponseNode
@@ -15,8 +18,8 @@ from src.nodes.appendtoolresult import AppendToolResultNode
 class GraphBuilder:
     def __init__(self):
         self.graph = StateGraph(State)
-        settings = load_config()
-        self.DB_URI = settings.REDIS_HOST + ":" + str(settings.REDIS_PORT)
+        self.settings = load_config()
+        # self.DB_URI = settings.REDIS_HOST + ":" + str(settings.REDIS_PORT)
 
     def build_graph(self):
         """
@@ -66,7 +69,14 @@ class GraphBuilder:
 
     def setup_graph(self):
         self.graph = self.build_graph()
+        # r = redis.Redis(
+        #     host=self.settings.REDIS_HOST,
+        #     port=self.settings.REDIS_PORT,
+        # )
+
+        # Create Redis checkpointer
+        checkpointer = InMemorySaver()
         # return self.graph.compile()
-        with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
-            checkpointer.setup()
-            return self.graph.compile(checkpointer=checkpointer)
+        # with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
+        #     checkpointer.setup()
+        return self.graph.compile(checkpointer=checkpointer)
