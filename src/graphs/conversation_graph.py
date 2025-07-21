@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import InMemorySaver
 
 # import redis
-from langgraph.checkpoint.redis import RedisSaver
+# from langgraph.checkpoint.redis import RedisSaver
 from langchain_core.runnables import RunnableLambda
 from src.config.settings import load_config
 from src.nodes.finalmodelresponse import FinalModelResponseNode
@@ -77,6 +77,6 @@ class GraphBuilder:
         # Create Redis checkpointer
         checkpointer = InMemorySaver()
         # return self.graph.compile()
-        with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
-            checkpointer.setup()
-            return self.graph.compile(checkpointer=checkpointer)
+        # with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
+        #     checkpointer.setup()
+        return self.graph.compile(checkpointer=checkpointer)
