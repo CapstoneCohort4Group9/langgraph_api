@@ -21,39 +21,51 @@ class CallingBedrockModelToolNode:
 
     def get_bedrock_client_with_sts(self):
         try:
-            # Priority: Use AWS_PROFILE if defined, otherwise default profile or env
-            profile_name = (
-                settings.AWS_PROFILE
-                if hasattr(settings, "AWS_PROFILE") and settings.AWS_PROFILE
-                else None
-            )
+            # Check if we're running in ECS (no profile specified)
+            if not settings.AWS_PROFILE and not settings.ASSUME_ROLE_ARN:
+                logger.info("🚀 Using ECS Task Role for Bedrock access")
+                return boto3.client(
+                    "bedrock-runtime", region_name=settings.BEDROCK_REGION
+                )
 
-            session = boto3.Session(profile_name=profile_name)
+            # Local development with assume role
+            elif settings.AWS_PROFILE and settings.ASSUME_ROLE_ARN:
+                logger.info(
+                    f"🔑 Using AWS Profile '{settings.AWS_PROFILE}' with assume role for local development"
+                )
+                # Priority: Use AWS_PROFILE if defined, otherwise default profile or env
+                profile_name = (
+                    settings.AWS_PROFILE
+                    if hasattr(settings, "AWS_PROFILE") and settings.AWS_PROFILE
+                    else None
+                )
 
-            # Optional: validate session identity
-            caller = session.client("sts").get_caller_identity()
-            print(f"Using credentials for: {caller['Arn']}")
+                session = boto3.Session(profile_name=profile_name)
 
-            # Step 1: STS AssumeRole using the session
-            sts = session.client("sts")
+                # Optional: validate session identity
+                caller = session.client("sts").get_caller_identity()
+                print(f"Using credentials for: {caller['Arn']}")
 
-            response = sts.assume_role(
-                RoleArn=settings.ASSUME_ROLE_ARN,
-                RoleSessionName="LangGraphBedrockSession",
-            )
+                # Step 1: STS AssumeRole using the session
+                sts = session.client("sts")
 
-            credentials = response["Credentials"]
+                response = sts.assume_role(
+                    RoleArn=settings.ASSUME_ROLE_ARN,
+                    RoleSessionName="LangGraphBedrockSession",
+                )
 
-            # Step 2: Create a Bedrock Runtime client with temporary session credentials
-            bedrock = boto3.client(
-                "bedrock-runtime",
-                region_name=settings.BEDROCK_REGION,
-                aws_access_key_id=credentials["AccessKeyId"],
-                aws_secret_access_key=credentials["SecretAccessKey"],
-                aws_session_token=credentials["SessionToken"],
-            )
+                credentials = response["Credentials"]
 
-            return bedrock
+                # Step 2: Create a Bedrock Runtime client with temporary session credentials
+                bedrock = boto3.client(
+                    "bedrock-runtime",
+                    region_name=settings.BEDROCK_REGION,
+                    aws_access_key_id=credentials["AccessKeyId"],
+                    aws_secret_access_key=credentials["SecretAccessKey"],
+                    aws_session_token=credentials["SessionToken"],
+                )
+
+                return bedrock
 
         except ClientError as e:
             raise RuntimeError(f"AWS ClientError: {e}")
