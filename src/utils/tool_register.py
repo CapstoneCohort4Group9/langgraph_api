@@ -128,6 +128,44 @@ INTENT_TOOL_MAP = {
             },
         }
     ],
+    "provide_booking_info": [
+        {
+            "name": "book_flight",
+            "description": "book_flight(origin: str, destination: str, departure_date: str, return_date: str, trip_type: str, airline: str, price: number, passengers: number, non_stop: boolean, price_per_passenger: number, classname: str, direct_only: boolean, preferred_time: str, price_per_person: number, layover_preference: str, flight_id: str, contact: str) -> dict - Book a selected flight with detailed preferences.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "origin": {"type": "string"},
+                    "destination": {"type": "string"},
+                    "departure_date": {"type": "string"},
+                    "return_date": {"type": "string"},
+                    "trip_type": {"type": "string"},
+                    "airline": {"type": "string"},
+                    "price": {"type": "number"},
+                    "passengers": {"type": "number"},
+                    "non_stop": {"type": "boolean"},
+                    "price_per_passenger": {"type": "number"},
+                    "classname": {"type": "string"},
+                    "direct_only": {"type": "boolean"},
+                    "preferred_time": {"type": "string"},
+                    "price_per_person": {"type": "number"},
+                    "layover_preference": {"type": "string"},
+                    "flight_id": {"type": "string"},
+                    "contact": {"type": "string"},
+                },
+                "required": [
+                    "origin",
+                    "destination",
+                    "departure_date",
+                    "trip_type",
+                    "airline",
+                    "price",
+                    "passengers",
+                    "contact",
+                ],
+            },
+        }
+    ],
     "check_flight_status": [
         {
             "name": "check_flight_status",
@@ -370,8 +408,8 @@ INTENT_TOOL_MAP = {
     ],
     "check_baggage_allowance": [
         {
-            "name": "query",
-            "description": "query(input: str) -> dict - Answer a natural language question based on available knowledge, optionally returning sources and confidence.",
+            "name": "query_policy_rag_db",
+            "description": "query_policy_rag_db(input: str) -> dict - This function is best suited for any policy and document releated customer query.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -413,8 +451,9 @@ def get_tool_prompt_for_intent(intent: str, messages) -> str:
             indent=2,
         )
     )
-    tool_block = "<tools>\n" + ",\n".join(tool_entries) + "\n</tools>"
+    tool_block = 'You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don\'t make assumptions about what values to plug into functions. Here are the available tools: <tools> {"type": "function", "function": {"name": "query", "description": "query(query: str) - query(input: str) -> dict - This function is best suited for any policy and document releated customer query. call this for check_baggage_allowance.\n\n    Args:\n        query(str): The natural language query or question to be answered.", "parameters": {"properties": {"query": {"description": "The natural language query or question to be answered.", "type": "string"}}, "required": ["query"], "type": "object"}} </tools>Use the following pydantic model json schema for each tool call you will make: {"properties": {"name": {"title": "Name", "type": "string"}, "arguments": {"title": "Arguments", "type": "object"}}, "required": ["name", "arguments"], "title": "FunctionCall", "type": "object"}}\nFor each function call return a json object with function name and arguments within <tool_call></tool_call> XML tags as follows:\n<tool_call>\n{"name": <function-name>, "arguments": <args-dict>}\n</tool_call>'
 
+    # messages.append({"role": "system", "content": tool_block})
     template_str = """{%- macro json_to_python_type(json_spec) %}
 {%- set basic_type_map = {
     "string": "str",

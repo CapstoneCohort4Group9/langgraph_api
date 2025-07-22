@@ -20,6 +20,7 @@ class GraphBuilder:
         self.graph = StateGraph(State)
         self.settings = load_config()
         self.DB_URI = self.settings.REDIS_HOST + ":" + str(self.settings.REDIS_PORT)
+        print(f"Using Redis DB URI: {self.DB_URI}")
 
     def build_graph(self):
         """
@@ -75,7 +76,7 @@ class GraphBuilder:
         # )
 
         # Create Redis checkpointer
-        checkpointer = InMemorySaver()
+        # checkpointer = InMemorySaver()
         # return self.graph.compile()
         with RedisSaver.from_conn_string(self.DB_URI) as checkpointer:
             checkpointer.setup()

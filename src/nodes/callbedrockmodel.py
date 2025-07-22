@@ -171,9 +171,9 @@ class CallingBedrockModelToolNode:
         payload = {
             "prompt": get_tool_prompt_for_intent(state["intent"], state["messages"]),
             # "prompt": json.dumps(bedrock_prompt_payload),
-            "max_tokens": 250,
+            "max_tokens": 380,
             "temperature": 0.5,
-            "top_p": 0.9,
+            "top_p": 0.7,
             "top_k": 50,
         }
         logger.info(
