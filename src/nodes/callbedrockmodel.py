@@ -6,9 +6,32 @@ import json
 import boto3
 from botocore.exceptions import ClientError, BotoCoreError
 from src.config.settings import load_config
-from jinja2 import Template
+from transformers import (
+    AutoTokenizer,
+    StoppingCriteria,
+    StoppingCriteriaList,
+)
 
 settings = load_config()
+
+# model_path = "capstone-research/HopJetAirHermes2Pro"
+
+
+# # Define stopping criteria
+# class StopOnTokens(StoppingCriteria):
+#     def __init__(self, stop_token_ids):
+#         self.stop_token_ids = stop_token_ids
+
+#     def __call__(self, input_ids, scores, **kwargs):
+#         return any(
+#             input_ids[0][-len(seq) :].tolist() == seq for seq in self.stop_token_ids
+#         )
+
+
+# tokenizer = AutoTokenizer.from_pretrained(model_path)
+# stop_sequences = ["<|im_start|>user", "<|user|>", "<|im_end|>"]
+# stop_token_ids = [tokenizer.encode(s, add_special_tokens=False) for s in stop_sequences]
+# stopping_criteria = StoppingCriteriaList([StopOnTokens(stop_token_ids)])
 
 
 class CallingBedrockModelToolNode:
@@ -171,10 +194,11 @@ class CallingBedrockModelToolNode:
         payload = {
             "prompt": get_tool_prompt_for_intent(state["intent"], state["messages"]),
             # "prompt": json.dumps(bedrock_prompt_payload),
-            "max_tokens": 380,
-            "temperature": 0.5,
-            "top_p": 0.7,
+            "max_tokens": 256,
+            "temperature": 0.3,
+            "top_p": 0.95,
             "top_k": 50,
+            "stop_sequences": ["<|im_start|>user", "<|user|>", "<|im_end|>"],
         }
         logger.info(
             "Invoking Bedrock model with payload: %s", json.dumps(payload, indent=2)

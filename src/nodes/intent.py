@@ -18,20 +18,21 @@ class IntentToolNode:
 
         intentSearchQuery = ""
         logger.info(f"state in intent detection...{state}")
-        if (
-            isinstance(state.get("messages"), list)
-            and len(state["messages"]) > 0
-            and state["messages"][-1].get("role") == "assistant"
-        ):
-            intentSearchQuery = (
-                state["messages"][-2]["content"]
-                + " "
-                + state["messages"][-1]["content"]
-                + " "
-                + state["input"]
-            )
-        else:
-            intentSearchQuery = state["input"]
+        # if (
+        #     isinstance(state.get("messages"), list)
+        #     and len(state["messages"]) > 0
+        #     and state["messages"][-1].get("role") == "assistant"
+        # ):
+        #     intentSearchQuery = (
+        #         state["messages"][-2]["content"]
+        #         + " "
+        #         + state["messages"][-1]["content"]
+        #         + " "
+        #         + state["input"]
+        #     )
+        # else:
+        #     intentSearchQuery = state["input"]
+        intentSearchQuery = state["input"]
         # if state["input"] == " Yes, please book that flight":
         #     intent = "confirm_booking"
         logger.info(f"Running intent detection...{intentSearchQuery}")
